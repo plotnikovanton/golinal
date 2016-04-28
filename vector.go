@@ -3,13 +3,27 @@ package la
 import (
 	"fmt"
 	"math"
+	"math/rand"
+	"time"
 )
 
 type Vector []float64
 
 // Cunstruct new Vector
-func VectorNew(elems ...float64) Vector {
+func NewVector(elems ...float64) Vector {
 	return elems
+}
+
+// Returns random vector with given length
+func NewRandomVector(length int) Vector {
+	rand.Seed(time.Now().UTC().UnixNano())
+	result := make(Vector, length)
+
+	for i := 0; i < length; i++ {
+		result[i] = rand.Float64()*2 - 1
+	}
+
+	return result
 }
 
 // Clones vector
@@ -86,6 +100,16 @@ func (a Vector) DotProd(b Vector) Vector {
 	return result
 }
 
+// Returns inner product for pair of vectors
+func (a Vector) InnerProd(b Vector) float64 {
+	AssertVectorsLength(a, b)
+	res := 0.
+	for i, val := range a {
+		res += val * b[i]
+	}
+	return res
+}
+
 // CrossProduct for Vectors length 3
 func (a Vector) CrossProd(b Vector) Vector {
 	AssertVectorsLength(a, b)
@@ -93,7 +117,7 @@ func (a Vector) CrossProd(b Vector) Vector {
 		panic(fmt.Sprintf("Given vectors length should be '3', but got", len(a)))
 	}
 
-	return VectorNew(
+	return NewVector(
 		a[1]*b[2]-b[1]*a[2],
 		-1*(a[0]*b[2]-b[0]*a[2]),
 		a[0]*b[1]-b[0]*a[1],
