@@ -1,9 +1,11 @@
 package la
 
 import (
+	"bytes"
 	"fmt"
 	"math"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -24,6 +26,32 @@ func NewRandomVector(length int) Vector {
 	}
 
 	return result
+}
+
+func (v Vector) String() string {
+	buff := bytes.NewBufferString("[")
+	for i, val := range v {
+		buff.WriteString(strconv.FormatFloat(val, 'g', -1, 64))
+		if i < len(v)-1 {
+			buff.WriteRune(',')
+		}
+	}
+	buff.WriteRune(']')
+	return buff.String()
+}
+
+// Equals checks if given vectors is equal to current vector
+func (a Vector) Equals(b Vector) bool {
+	if len(a) != len(b) {
+		return false
+	} else {
+		for i, val := range a {
+			if val != b[i] {
+				return false
+			}
+		}
+		return true
+	}
 }
 
 // Clones vector
